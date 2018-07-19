@@ -13,11 +13,10 @@ elseif (strcmp(country,'en'))
     max_length = [6];
     order_stim = 1:20;
 end
-temp = datadir;
-owd1=temp;
-temp = [datadir, '/mat-files/'];
-location=temp;
-cd(owd1);
+%temp = datadir;
+%owd1=temp;
+cd(datadir);
+%temp = [datadir, '/mat-files/'];
 subjects=textread([subsfiledir 'subs.txt']);
 k=size(subjects,1);
 extras = zeros(k,20,6);
@@ -44,13 +43,11 @@ for na=1:k;
     fclose('all');
 end
 %%
-%fclose('all');
+% fclose('all');
 extras(extras <0) = NaN;
-orig_extras = extras;
+% orig_extras = extras;
 %%
-
 if(strcmp(country, 'jp'))
-    %%
     %fix coding of time, only for JAPAN
     [row_weeks, col_weeks] = find(extras(:,:,3)==2); % weeks
     week_indices = sub2ind(size(extras), row_weeks, col_weeks, repmat(2,[size(row_weeks),1])); % the 'day' values of 'week's
@@ -61,10 +58,8 @@ if(strcmp(country, 'jp'))
     extras(week_indices) = extras(week_indices)*7;
     extras(month_indices) = extras(month_indices)*30;
     extras(year_indices) = extras(year_indices)*365;
-    %%
     % take out 'lapse scale' to harmonize bg info order
     extras(:,:,3) = [];
-    %%
     % fix order of stimuli in jp dataset
     extras = extras(:,order_stim,:);
 end
