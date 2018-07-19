@@ -44,13 +44,14 @@
   - Plotting: tmaps\_tworows.m
 * Linear regression
   - statistical analysis & plotting: statistical_analysis_bond_sli.R
+  - gender\_trellis\_scatter.m for bond vs TI by toucher sex 
 * ROI-analysis
   - Slopes & statistical analysis:
   - Plotting:
   - Final plot combined from ROI definitions and ROI_output in Adobe Illustrator
 * Gender differences
-  - analysis 
-  - plotting
+  - gender\_plots.R for the comparison between specific social network members (mother/father, sister/brother etc.) and interaction plot
+  - gender\_trellis_scatter.m for bond vs TI by toucher sex 
 
 # Some idiosyncracies of the data as it is collected
 There are some discrepancies in which order social network members were listed and the exact social network members (familiar f/m child vs niece/nephew). These do not impact the final analyses since children are not included in that and the analysis code corrects for the differences in the order. If you are only interested in steps after preprocessing, you do not need to take the following into account. The following discrepancies are only relevant when handling the raw data.
