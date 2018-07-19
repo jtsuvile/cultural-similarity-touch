@@ -39,8 +39,9 @@
 
 * Participant statistics
   - foo
+  - country-wise distributions of emotional bond, TI, pleasantness:
 * Topographies
-  - Differences in topographies: 
+  - Differences in topographies: two\_sample\_prop\_test\_country\_comparison.m 
   - Plotting: tmaps\_tworows.m
 * Linear regression
   - statistical analysis & plotting: statistical_analysis_bond_sli.R
