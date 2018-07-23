@@ -22,49 +22,8 @@ interesting_people <- people[trim]
 whole_fig_size = 178524
 inside_mask = 89129
 
-countries <- c('uk','jp')
-
-# load & clean up data
-for(country in countries){
-  subjects <- read.csv(paste(dataroot, country, '_subs_basic_info.csv', sep=''),header=TRUE)
-  socnetwork <- read.csv(paste(dataroot, country, '_socnetwork.csv', sep=''), header=FALSE)
-  sli <- read.csv(paste(dataroot, country, '_area_new.csv', sep=''), header=FALSE)
-  bonds <- read.csv(paste(dataroot, country, '_emotional_bonds.csv', sep=''), header=F, na.strings = 'NaN')
-  pleasantness <- read.csv(paste(dataroot, country, '_touch_pleasantness.csv', sep=''), header=FALSE,sep=",",na.strings = 'NaN')
-  
-  ## change 0 to NA in nonexistent persons
-  sli[socnetwork==0] = NA
-  bonds[socnetwork==0] = NA
-  pleasantness[socnetwork==0] = NA
-  #massage data to proper shape
-  bonds_trim <- bonds[,trim]
-  colnames(bonds_trim) <- interesting_people
-  bonds_trim$subid <- subjects$subid
-  pleasantness_trim <- pleasantness[,trim]
-  colnames(pleasantness_trim) <- interesting_people
-  pleasantness_trim$subid <- subjects$subid
-  sli_trim <- sli[,trim]
-  colnames(sli_trim) <- interesting_people
-  sli_trim$subid <- subjects$subid
-  sli_trim$subsex <- subjects$sex
-  bonds_long <- melt(bonds_trim, id=c("subid"),variable_name='person',na.rm=TRUE)
-  colnames(bonds_long) <- c('subid','person','bond')
-  sli_long <- melt(sli_trim, id=c("subid",'subsex'),variable_name='person',na.rm=TRUE)
-  colnames(sli_long) <- c('subid','subsex','person','touchability')
-  pleasantness_long <- melt(pleasantness_trim, id=c("subid"),variable_name='person',na.rm=TRUE)
-  colnames(pleasantness_long) <- c('subid','person','pleasantness')
-  temp <- merge(sli_long, bonds_long, by=c("subid","person"))
-  temp$country <- country
-  total <- merge(temp, pleasantness_long, by=c('subid','person'))
-  total$touchability_proportion <- total$touchability/inside_mask
-  if(country=='uk'){
-    total_uk <- total
-  } else if (country=='jp'){
-    total_jp <- total
-  } else {
-    print("problem with country name")
-  }
-}
+load(paste0(dataroot, 'uk','/total_uk.Rdata'))
+load(paste0(dataroot, 'jp','/total_jp.Rdata'))
 
 total_both <- rbind(total_uk, total_jp)
 total_both$country <- factor(total_both$country)

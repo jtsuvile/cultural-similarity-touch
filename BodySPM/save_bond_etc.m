@@ -8,7 +8,7 @@ if(strcmp(country, 'jp'))
     % NB: because the shuffling happens differently than in write bodies,
     % the order presented here is different. End result is the same, though
     order_stim = [1:6 9:16 7:8 17:20];
-elseif (strcmp(country,'en'))
+elseif (strcmp(country,'uk'))
     files = {'peopledetails.txt'};
     max_length = [6];
     order_stim = 1:20;
@@ -66,16 +66,17 @@ end
 %%
 cd(subsfiledir);
 pleasantness = extras(:,:,5);
-dlmwrite(fullfile(paste0('./',country,'_touch_pleasantness.csv')),pleasantness,'delimiter',',','precision',1);
+dlmwrite(fullfile(['./',country,'_touch_pleasantness.csv']),pleasantness,'delimiter',',','precision',1);
 bonds = extras(:,:,4);
-dlmwrite(fullfile(paste0('./',country,'_emotional_bonds.csv')),bonds,'delimiter',',','precision',10);
+dlmwrite(fullfile(['./',country,'_emotional_bonds.csv']),bonds,'delimiter',',','precision',10);
 sex = extras(:,:,3);
-dlmwrite(fullfile(paste0('./',country,'_toucher_sex.csv')),sex,'delimiter',',','precision',1);
+dlmwrite(fullfile(['./',country,'_toucher_sex.csv']),sex,'delimiter',',','precision',1);
 cd([subsfiledir 'mat-files']);
 save('bondetc.mat', 'extras','-v7.3');
 
 end
 %% for manual qc: check if date conversion worked
+% only relevant for japanese data
 % 
 % week_indices_2 = sub2ind(size(extras), row_weeks, col_weeks, repmat(2,[size(row_weeks),1])); % the 'day' values of 'week's
 % week_indices_3 = sub2ind(size(extras), row_weeks, col_weeks, repmat(3,[size(row_weeks),1])); % the 'day' values of 'week's
