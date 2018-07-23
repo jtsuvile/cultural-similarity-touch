@@ -1,0 +1,112 @@
+function [k] = write_bodies_2(root, bodyspm, country)
+% write_bodies(experiment)
+% writes raw body data into matrix format
+% assumes list of good subjects (subs.txt) residing in the data folder
+% input = words / faces / movie / story
+% original function by Enrico Glerean
+% edited by Juulia Suvilehto
+%% Basic definitions for the experiment
+addpath(bodyspm)
+base=uint8(imread(sprintf('%sbase2.png',bodyspm)));
+mask=uint8(imread(sprintf('%sbase3.png',bodyspm)));
+mask=mask*.85;
+base2=base(10:531,33:203,:);
+%% NB: japanese data presents stimuli in wrong order, it is fixed here
+
+if(strcmp(country,'jp'))
+    order_stim = [1:6 15:16 7:14 17:20]; % reshuffle such that niece and nephew are between acquaintance and stranger
+else
+    order_stim = 1:20; % already good
+end
+
+%% Hey ho, let's go ...
+
+subdir=root;
+cd(subdir);
+D = dir(subdir);
+subjects=textread('subs.txt');
+k=size(subjects,1);
+if(~exist(sprintf('%s/%s', pwd, 'mat-files'), 'dir'));
+    mkdir(pwd, 'mat-files');
+end
+
+
+%% Loop through the subjects & emotion conditions
+for ns=1:k;
+    sub=sprintf('%s/%s',subdir,num2str(subjects(ns)));
+    list=csvread([sub '/presentation.txt']);
+    N=length(list);
+    a=load_subj(sub,2);
+    S=20;
+    disp(['Processing subject ' num2str(subjects(ns)) ' which is number ' num2str(ns) ' out of ' num2str(k)]);
+    resmat=zeros(522,171*2,21);
+    
+    for n=1:S;
+        target = order_stim(n);
+        if(n==1 && list(n)~=0);
+            over=nan(size(base,1),size(base,2));
+            over2=[over(10:531,33:203,:) over(10:531,696:866,:)];
+            resmat(:,:,target)=over2;
+        elseif(n~=1 && isempty(find(list==n-1)));
+            over=nan(size(base,1),size(base,2));
+            over2=[over(10:531,33:203,:) over(10:531,696:866,:)];
+            resmat(:,:,target)=over2;
+        else
+            if (n==1)
+                T = length(a(1).paint(:,2));
+                over=zeros(size(base,1),size(base,2));
+                for t=1:T
+                    y=ceil(a(1).paint(t,3)+1);
+                    x=ceil(a(1).paint(t,2)+1);
+                    if(x<=0) x=1; end
+                    if(y<=0) y=1; end
+                    if(x>=900) x=900; end
+                    if(y>=600) y=600; end
+                    over(y,x)=over(y,x)+1;
+                end
+            else
+                T=length(a(find(list==n-1)).paint(:,2));
+                over=zeros(size(base,1),size(base,2));
+                for t=1:T
+                    y=ceil(a(find(list==n-1)).paint(t,3)+1);
+                    x=ceil(a(find(list==n-1)).paint(t,2)+1);
+                    if(x<=0) x=1; end
+                    if(y<=0) y=1; end
+                    if(x>=900) x=900; end
+                    if(y>=600) y=600; end
+                    over(y,x)=over(y,x)+1;
+                end
+            end
+            h=fspecial('gaussian',[25 25],8.5);
+            over=imfilter(over,h);
+            over2=[over(10:531,33:203,:) over(10:531,696:866,:)];
+            resmat(:,:,target)=over2;
+        end
+    end
+    subname=sprintf('%s',num2str(subjects(ns)));
+    matname=fullfile(root, 'mat-files', sprintf('subject_%s.mat',subname));
+    save (matname, 'resmat');
+    %%
+    %     close all;
+    %     for i=1:20;
+    %         subplot(2,10,i);
+    %         imagesc(base2);
+    %         axis('off');
+    %         set(gcf,'Color',[1 1 1]);
+    %         hold on;
+    %         over2=resmat(:,:,i);
+    %
+    %         fh=imagesc(over2);
+    %         axis('off');
+    %         colormap(jet);
+    %         %mask=ones(size(over2))*.7; old
+    %         set(fh,'AlphaData',[mask mask])
+    %         title(en_labels(i),'FontSize',10)
+    %     end
+    % %
+    %     fname1=sprintf('%s.tiff',subname);
+    %
+    %     export_fig(fname1, '-m1.5');
+    %     close all
+end
+

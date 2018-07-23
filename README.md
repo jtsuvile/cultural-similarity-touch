@@ -12,7 +12,7 @@
 
 * Quality Control
   
-  Data quality control for the subject-wise touch area maps. Subjects were excluded if they had left more than X bodies completely empty or if there was evidence of clearly colouring outside the body outline or other scribbling. Latter was defined visually by RK and JS. Subjects excluded due to QC are listed at qc\_fail.txt 
+  Data quality control for the subject-wise touch area maps. Subjects were excluded if they had left more than X bodies completely empty or if there was evidence of clearly colouring outside the body outline or other scribbling. In the Japanese data set there was an additional control task, where the subjects were told to only colour in the hair of the figure. Leaving hair uncoloured or colouring areas outside of the hair led to that subject being excluded from the final data set. Latter was defined visually by RK and JS. Subjects excluded due to QC are listed at qc\_fail.txt 
 
 * Control for cultural affiliation
 

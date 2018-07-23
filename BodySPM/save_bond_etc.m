@@ -64,8 +64,16 @@ if(strcmp(country, 'jp'))
     extras = extras(:,order_stim,:);
 end
 %%
+cd(subsfiledir);
+pleasantness = extras(:,:,5);
+dlmwrite(fullfile(paste0('./',country,'_touch_pleasantness.csv')),pleasantness,'delimiter',',','precision',1);
+bonds = extras(:,:,4);
+dlmwrite(fullfile(paste0('./',country,'_emotional_bonds.csv')),bonds,'delimiter',',','precision',10);
+sex = extras(:,:,3);
+dlmwrite(fullfile(paste0('./',country,'_toucher_sex.csv')),sex,'delimiter',',','precision',1);
 cd([subsfiledir 'mat-files']);
 save('bondetc.mat', 'extras','-v7.3');
+
 end
 %% for manual qc: check if date conversion worked
 % 
