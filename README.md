@@ -41,8 +41,8 @@ NB: these steps have already been completed for the shared data to strip some po
 ## Analyses and visualisations
 
 * Participant statistics
-  - foo
-  - country-wise distributions of emotional bond, TI, pleasantness:
+  - subject\_descriptive\_stats.R
+* Country-wise distributions of emotional bond, TI, pleasantness: visualise\_bond\_distribution.R
 * Topographies
   - Differences in topographies: two\_sample\_prop\_test\_country\_comparison.m 
   - Plotting: tmaps\_tworows.m
