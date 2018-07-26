@@ -35,8 +35,8 @@ function countTI(dataloc, bodyspmdir)
     %bar(B);
     %set(gca,'XTickLabel',compare_labels(IX));
 %%
-    order = IX;
-    cd(location);
+    %order = IX;
+    %cd(location);
     %save('area_sorted_new.mat', 'order','-v7.3');
     save([location 'area_new.mat'],'sli','-v7.3');
     csvwrite([dataloc 'area_new.csv'],sli);
