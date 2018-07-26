@@ -33,5 +33,5 @@ function get_social_network_members(datadir,country)
     %%
     cd([datadir 'mat-files']);
     save('social_network.mat', 'socnetwork','-v7.3');
-    dlmwrite(fullfile(sprintf('%s/mat-files/%s_socnetwork.csv',datadir, country)),socnetwork,'delimiter',',','precision',1);
+    dlmwrite(fullfile(sprintf('%s/%s_socnetwork.csv',datadir, country)),socnetwork,'delimiter',',','precision',1);
 end

@@ -1,13 +1,14 @@
 % set BodySPM directory
 bodyspmdir = '/m/nbe/scratch/socbrain/cultural_comparison_code_test/cultural-universalism-touch/BodySPM';
 addpath(bodyspmdir)
+dataloc = '/Volumes/SCRsocbrain/cultural_comparison_code_test/data/';
+
 %% Binarize coloring files
 % In the raw coloring data, the colored pixels can have different values 
 % depending on how long an area has been colored. The following takes the
 % raw data matrix and saves it as full binarized raw data matrix as well as 
 % toucher-specific raw data matrices (e.g. 'sister_binary_results.mat')
-dataloc = '/m/nbe/scratch/socbrain/cultural_comparison_code_test/data/';
-
+%dataloc = '/m/nbe/scratch/socbrain/cultural_comparison_code_test/data/';
 dataloc_uk = [dataloc '/uk/'];
 people_uk = {'partner' 'kid' 'mom' 'dad' 'sister' 'brother' ...
     'aunt' 'uncle' 'f_cousin' 'm_cousin' ...
@@ -43,3 +44,6 @@ countSLI(dataloc_uk, bodyspmdir);
 prop_colored(dataloc_uk, people_uk)
 % Japanese data
 prop_colored(dataloc_jp, people_jp)
+%% Collect TI per subject per toucher
+countTI(dataloc_jp, bodyspmdir);
+countTI(dataloc_uk, bodyspmdir);

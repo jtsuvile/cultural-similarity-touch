@@ -36,6 +36,7 @@ NB: these steps have already been completed for the shared data to strip some po
 ## Preprocessing
 
 * workflow\_2\_preprocess.m
+* format\_data.R
 
 ## Analyses and visualisations
 

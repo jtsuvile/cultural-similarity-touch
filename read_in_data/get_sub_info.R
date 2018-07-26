@@ -59,13 +59,13 @@ for(country in countries){
   write.csv(good_data[,1:11], paste(behavroot, 'subinfo_for_matlab.csv', sep=''), quote=FALSE, row.names=FALSE)
   # data.copy <- data
   # code factors as text for a human-readable csv
-  data$handedness <- factor(data$handedness, levels=c(1,0), labels=c('right','left'))
+  good_data$handedness <- factor(good_data$handedness, levels=c(1,0), labels=c('right','left'))
   # NB: having 1 code female is not a mistake, it's how the values are coded in the online system
-  data$sex <- factor(data$sex, levels=c(1,0,5), labels=c('female','male','other')) 
-  data$education <- factor(data$education, levels=c(0,1,2), labels=c('elementary','middle','university')) 
+  good_data$sex <- factor(good_data$sex, levels=c(1,0,5), labels=c('female','male','other')) 
+  good_data$education <- factor(good_data$education, levels=c(0,1,2), labels=c('elementary','middle','university')) 
   if (country=='jp'){
-    data$sexual_orientation <- factor(data$sexual_orientation, levels=c(1,0,2,3), labels=c('female','male','both','neither')) 
+    good_data$sexual_orientation <- factor(good_data$sexual_orientation, levels=c(1,0,2,3), labels=c('female','male','both','neither')) 
   }
-  write.csv(data, paste0(behavroot, 'subs_basic_info.csv'), quote=FALSE, row.names=FALSE)
+  write.csv(good_data, paste0(behavroot, 'subs_basic_info.csv'), quote=FALSE, row.names=FALSE)
 }
 
