@@ -11,8 +11,11 @@ function get_social_network_members(datadir,country)
     %%
     for ns=1:k;
         sub=sprintf('%s/%s',datadir,num2str(subs(ns)));
-        fid = fopen([sub '/peopledata.txt']);
-        %fid = fopen([sub '/select_people.txt']);
+        if(strcmp(country, 'jp'))
+            fid = fopen([sub '/select_people.txt']);
+        else
+            fid = fopen([sub '/peopledata.txt']);
+        end
         try
             tline = fgets(fid);
             spli = strsplit(tline,',');
