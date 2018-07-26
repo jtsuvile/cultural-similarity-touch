@@ -16,13 +16,13 @@ function get_social_network_members(datadir,country)
         try
             tline = fgets(fid);
             spli = strsplit(tline,',');
-            for j = 1:16
+            for j=1:16
                 subjinfo(ns, j) = str2num(spli{j});
             end
         catch err
             disp(ns);
             disp(sub);
-            disp(j);
+            %disp(j);
             break
         end
         fclose('all');

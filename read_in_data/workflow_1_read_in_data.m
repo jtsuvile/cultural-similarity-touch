@@ -4,7 +4,7 @@ datadir = '/Volumes/SCRsocbrain/cultural_comparison_code_test/data';
 addpath(bodyspm)
 %% Collect data
 countries = {'jp','uk'};
-for(i=1:length(countries))
+for i=1:length(countries)
     country = countries{i};
     root = [datadir '/' country '/'];
     % NB: fixing order of stimuli in japanese samples happens already here
@@ -17,10 +17,7 @@ for(i=1:length(countries))
     % subjects' mat-files are size 522*342*20
     write_bodies_2(root, bodyspm, country);
 end
-%% QC
-% This is when the plots were visually inspected (code for printing 
-% them out is commented out in write_bodies_2.m) and subjects
-% not meeting Quality Control criteria were removed from subs.txt.
+
 %% To gather non-colouring data, run get_sub_info.R in R
 % this contains different variable types, so can be better cleaned in R
 %%
@@ -29,6 +26,8 @@ check_bad_bond(datadir);
 % an exact number and matlab is very bad with factors)
 %% combine data to large matrices
 % NB: this creates an uncomfortably large array, best to run on cluster
+datadir = '/m/nbe/scratch/socbrain/cultural_comparison_code_test/data';
+addpath('/m/nbe/scratch/socbrain/cultural_comparison_code_test/cultural-universalism-touch/BodySPM');
 countries = {'jp','uk'};
 for(i=1:length(countries))
     country=countries{i};
