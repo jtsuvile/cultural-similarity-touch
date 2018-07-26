@@ -13,8 +13,10 @@ function get_social_network_members(datadir,country)
         sub=sprintf('%s/%s',datadir,num2str(subs(ns)));
         if(strcmp(country, 'jp'))
             fid = fopen([sub '/select_people.txt']);
+            order_stim = [1:6 9:16 7:8 17:20];
         else
             fid = fopen([sub '/peopledata.txt']);
+            order_stim = 1:20;
         end
         try
             tline = fgets(fid);
@@ -32,7 +34,7 @@ function get_social_network_members(datadir,country)
     end
     % add strangers for everyone
     subjinfo(:,17:20) = 1;
-    socnetwork=subjinfo;
+    socnetwork=subjinfo(:,order_stim);
     %%
     cd([datadir 'mat-files']);
     save('social_network.mat', 'socnetwork','-v7.3');
