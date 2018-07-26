@@ -47,3 +47,8 @@ prop_colored(dataloc_jp, people_jp)
 %% Collect TI per subject per toucher
 countTI(dataloc_jp, bodyspmdir);
 countTI(dataloc_uk, bodyspmdir);
+%% Save ROI-wise info
+dataroot = '/m/nbe/scratch/socbrain/cultural_comparison_code_test/data/';
+bodyspmdir='/m/nbe/scratch/socbrain/cultural_comparison_code_test/cultural-universalism-touch/BodySPM/';
+save_touchability_by_area(dataroot, 'jp', bodyspmdir);
+save_touchability_by_area(dataroot, 'uk', bodyspmdir);

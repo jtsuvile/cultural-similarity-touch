@@ -1,20 +1,6 @@
-clear all;
-close all;
+function save_touchability_by_area(dataroot, country, bodyspmdir)
 
-country = 'jp';
-%dataroot = '/Volumes/SCRsocbrain/cultural_comparison_code_test/data/';
-%bodyspmdir='/Users/jtsuvile/Documents/projects/cultural-universalism-touch/BodySPM/';
-
-dataroot = '/m/nbe/scratch/socbrain/cultural_comparison_code_test/data';
-bodyspmdir='/Users/jtsuvile/Documents/projects/cultural-universalism-touch/BodySPM/';
-
-
-full_labels = {'Partner' 'kid' 'Mother' 'Father' 'Sister' 'Brother' ...
-    'Aunt' 'Uncle' 'Cousin' 'Cousin' ...
-    'Friend' 'Friend' 'Acq.' 'Acq.' 'm kid' 'f kid' ...
-     'Stranger' 'Stranger' 'rand f kid' 'rand m kid', 'check'};
 trim = [1 3 4 5 6 7 8 9 10 11 12 13 14 17 18]; %removes children
-order_trim = trim;
 %%
 datafile = [dataroot country '/mat-files/raw_binary_results.mat'];
 load(datafile);
@@ -94,7 +80,7 @@ prop_avg_res = avg_res./sizes_of_areas;
 median_res = nanmedian(res,3);
 prop_median_res = median_res./sizes_of_areas;
 %% Save all
-save([dataroot country '/colored_pixels_by_subject_by_area'], 'res', 'areas', 'trim', 'size_of_areas');
+save([dataroot country '/mat-files/colored_pixels_by_subject_by_area'], 'res', 'areas', 'trim', 'size_of_areas');
 csvwrite([dataroot country '/average_pixels_by_area.csv'], avg_res);
 csvwrite([dataroot country '/average_prop_colored_by_area.csv'], prop_avg_res);
 csvwrite([dataroot country '/median_pixels_by_area.csv'], median_res);
@@ -103,17 +89,23 @@ csvwrite([dataroot country '/median_prop_colored_by_area.csv'], prop_median_res)
 csvwrite([bodyspmdir '/size_of_areas.csv'], size_of_areas);
 fileID = fopen([bodyspmdir '/name_of_areas.txt'],'w');
 formatSpec = '%s\n';
-[nrows,ncols] = size(areas);
+[nrows, ncols] = size(areas);
 for row = 1:nrows
     fprintf(fileID,formatSpec,areas{row,:});
 end
 fclose(fileID);
 %%
+arealoc = [dataroot country '/areas/'];
+if(~exist(arealoc,'dir'))
+    mkdir(arealoc)
+end
+
 for k=1:length(areas)
     curr = squeeze(res(:,k,:))';
     curr_prop = curr/size_of_areas(k);
-    csvwrite([dataroot areas{k} '_pixels_by_subject_' country '.csv'], curr);
-    csvwrite([dataroot areas{k} '_prop_by_subject_' country '.csv'], curr_prop);
+    csvwrite([arealoc areas{k} '_pixels_by_subject.csv'], curr);
+    csvwrite([arealoc areas{k} '_prop_by_subject.csv'], curr_prop);
 end
 %%
-print('done');
+disp('done');
+end
