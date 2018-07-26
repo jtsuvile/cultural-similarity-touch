@@ -1,7 +1,8 @@
 %% Then, two-sample prop test (z score)
 clear all;
 close all;
-dataloc = '/m/nbe/scratch/socbrain/japan_soctouch/data/';
+dataloc = '/m/nbe/scratch/socbrain/cultural_comparison_code_test/data/';
+addpath('/m/nbe/scratch/socbrain/cultural_comparison_code_test/cultural-universalism-touch/BodySPM')
 
 countries = {'jp','en'};
 compare_labels = {'partner' 'mom' 'dad' 'sister' 'brother' ...
@@ -11,7 +12,6 @@ compare_labels = {'partner' 'mom' 'dad' 'sister' 'brother' ...
         'f_stranger' 'm_stranger'};
 FDRres = zeros(length(compare_labels), 2);
 zscores = zeros(522,342,length(compare_labels));
-addpath('/m/nbe/scratch/socbrain/japan_soctouch/code/BodySPM/')
 
 %%
 for j=1:length(compare_labels)
@@ -57,7 +57,7 @@ for j=1:length(compare_labels)
     zscores(:,:,j) = empty_figure;
 end
 %%
-cd('/m/nbe/scratch/socbrain/japan_soctouch/data/');
+cd(dataloc);
 save ('prop_test_jp_minus_en_zscore_results.mat', 'zscores'); 
 disp('FDR limits');
 save('FDR_limits_for_zscores.mat','FDRres');

@@ -47,13 +47,14 @@ NB: these steps have already been completed for the shared data to strip some po
   - Differences in topographies: two\_sample\_prop\_test\_country\_comparison.m 
   - Plotting: tmaps\_tworows.m
 * Linear regression
-  - statistical analysis & plotting: statistical_analysis_bond_sli.R
+  - statistical analysis & plotting: statistical\_analysis\_bond\_sli.R
   - gender\_trellis\_scatter.m for bond vs TI by toucher sex 
 * ROI-analysis
-  - Slopes & statistical analysis:
-  - Plotting:
-  - Final plot combined from ROI definitions and ROI_output in Adobe Illustrator
+  - Save area-wise TIs: 
+  - Slopes & statistical analysis: compare\_statistically\_by\_area.R
+  - Plotting: plot\_touchability\_by\_area.R
+  - Final plot combined from ROIdefinitions.svg and ROI_output in Adobe Illustrator
 * Gender differences
-  - gender\_plots.R for the comparison between specific social network members (mother/father, sister/brother etc.) and interaction plot
+  - gender\_plots.R for the comparison between specific social network members (mother/father, sister/brother etc.) and interaction plot as well as ANOVA
   - gender\_trellis_scatter.m for bond vs TI by toucher sex 
 

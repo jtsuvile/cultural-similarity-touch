@@ -1,0 +1,13 @@
+hair
+face
+shoulder_front
+shoulder_back
+arm
+hand
+torso_front
+torso_back
+crotch
+bottom
+leg_front
+leg_back
+foot

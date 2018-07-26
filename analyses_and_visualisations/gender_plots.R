@@ -7,8 +7,9 @@ library(relaimpo)
 source('../bodySPM/summarySE.R')
 source('../bodySPM/multiplot.R')
 
-dataroot <- '/Users/jtsuvile/Documents/projects/jap-touch/data/'
-trim = c(1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18) # removes children who mess up the set!
+dataroot <- '/Volumes/SCRsocbrain/cultural_comparison_code_test/data/'
+figlocation <- '/Volumes/SCRsocbrain/cultural_comparison_code_test/figs/'
+trim = c(1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18) 
 people <- c('Partner', 'kid', 'Mother', 'Father', 'Sister', 'Brother', 
             'Aunt', 'Uncle', 'F_Cousin', 'M_Cousin',
             'F_Friend', 'M_Friend', 'F_Acq', 'M_Acq', 'm kid', 'f kid', 
@@ -22,8 +23,8 @@ interesting_people <- people[trim]
 whole_fig_size = 178524
 inside_mask = 89129
 
-load(paste0(dataroot, 'uk','/total_uk.Rdata'))
-load(paste0(dataroot, 'jp','/total_jp.Rdata'))
+total_uk <- readRDS(paste0(dataroot, 'uk/total_uk.Rdata'))
+total_jp <- readRDS(paste0(dataroot, 'jp/total_jp.Rdata'))
 
 total_both <- rbind(total_uk, total_jp)
 total_both$country <- factor(total_both$country)
@@ -77,7 +78,7 @@ p5 <- ggplot(data=no_partner_aggregate, aes(x=relationship,
         strip.text.x = element_text(face="bold")) +
   ylim(0,0.5)
 
-pdf('/Users/jtsuvile/Documents/projects/jap-touch/visualizations/gender_effect_PNASlike_facet_wrap.pdf')
+pdf(paste0(figlocation, '/gender_effect_barchart_facet_wrap.pdf'))
 p5
 dev.off()
 
@@ -116,7 +117,7 @@ p6 <- ggplot(data=no_partner_aggregate, aes(x=factor(toucher_sex),
         axis.text.y = element_text(margin = margin(r=0.5, unit = "cm"))) + 
   ylim(0,0.3)
 
-pdf('/Users/jtsuvile/Documents/projects/jap-touch/visualizations/gender_effect_interaction_plot.pdf')
+pdf(paste0(figlocation,'/gender_effect_interaction_plot.pdf'))
 p6
 dev.off()
 
@@ -129,9 +130,9 @@ TukeyHSD(lm_no_partner)
 
 #main effect: country
 mean(no_partner$touchability_proportion[no_partner$country=='jp'])
-mean(no_partner$touchability_proportion[no_partner$country=='en'])
+mean(no_partner$touchability_proportion[no_partner$country=='uk'])
 sd(no_partner$touchability_proportion[no_partner$country=='jp'])
-sd(no_partner$touchability_proportion[no_partner$country=='en'])
+sd(no_partner$touchability_proportion[no_partner$country=='uk'])
 
 # main effect: toucher sex
 mean(no_partner$touchability_proportion[no_partner$toucher_sex=='Female'])
