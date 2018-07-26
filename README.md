@@ -50,7 +50,6 @@ NB: these steps have already been completed for the shared data to strip some po
   - statistical analysis & plotting: statistical\_analysis\_bond\_sli.R
   - gender\_trellis\_scatter.m for bond vs TI by toucher sex 
 * ROI-analysis
-  - Save area-wise TIs: 
   - Slopes & statistical analysis: compare\_statistically\_by\_area.R
   - Plotting: plot\_touchability\_by\_area.R
   - Final plot combined from ROIdefinitions.svg and ROI_output in Adobe Illustrator
