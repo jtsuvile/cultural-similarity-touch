@@ -1,7 +1,7 @@
 % set BodySPM directory
 bodyspmdir = '/m/nbe/scratch/socbrain/cultural_comparison_code_test/cultural-universalism-touch/BodySPM';
 addpath(bodyspmdir)
-dataloc = '/Volumes/SCRsocbrain/cultural_comparison_code_test/data/';
+dataloc = '/m/nbe/scratch/socbrain/cultural_comparison_code_test/data/';
 
 %% Binarize coloring files
 % In the raw coloring data, the colored pixels can have different values 

@@ -10,7 +10,9 @@ source('../bodySPM/multiplot.R')
 
 dataroot <- '/Volumes/SCRsocbrain/cultural_comparison_code_test/data/'
 figlocation <- '/Volumes/SCRsocbrain/cultural_comparison_code_test/figs/'
+sinkfile <- "/Users/jtsuvile/Documents/projects/jap-touch/stat_analysis_bond_output.txt"
 
+sink(sinkfile)
 
 trim = c(1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18) 
 people <- c('Partner', 'kid', 'Mother', 'Father', 'Sister', 'Brother', 
@@ -33,6 +35,13 @@ total_jp <- readRDS(paste0(dataroot, 'jp','/total_jp.Rdata'))
 total_both <- rbind(total_uk, total_jp)
 total_both$country <- factor(total_both$country)
 
+#get correlation between bond and pleasantness
+corr_jp <- corr.test(total_jp[,c('bond','pleasantness')], method='spearman')
+print(paste('correlation between touch pleasantness and bond in Japanese data:',corr_jp$r['pleasantness','bond'], 'p = ', corr_jp$p['pleasantness','bond']))
+corr_uk <- corr.test(total_uk[,c('bond','pleasantness')], method='spearman')
+print(paste('correlation between touch pleasantness and bond in British data:',corr_uk$r['pleasantness','bond'], 'p = ', corr_uk$p['pleasantness','bond']))
+
+
 ## VISUALISE THE AVERAGED DATA
 jp_averages <- aggregate(total_jp[, c(5,7,8)], list(total_jp$person), mean)
 uk_averages <- aggregate(total_uk[, c(5,7,8)], list(total_uk$person), mean)
@@ -41,17 +50,19 @@ uk_averages$country <- 'uk'
 both_avg <- rbind(uk_averages, jp_averages)
 both_avg$country <- factor(both_avg$country)
 
-lm_jp_avg <- lm(touchability_proportion~pleasantness+bond, data=jp_averages)
+#lm_jp_avg <- lm(touchability_proportion~pleasantness+bond, data=jp_averages)
 #summary(lm_jp_avg)
-lm_uk_avg <- lm(touchability_proportion~pleasantness+bond, data=uk_averages)
+#lm_uk_avg <- lm(touchability_proportion~pleasantness+bond, data=uk_averages)
 #summary(lm_uk_avg)
 
 lm_both_avg <- lm(scale(touchability_proportion)~scale(bond)+scale(pleasantness)+country, data=both_avg)
-
+print('TI~ bond+pleasantness+country, averaged data: ')
 summary(lm_both_avg)
+print('betas for averaged data: ')
 lm.beta(lm_both_avg)
 
 relimp_avg <- calc.relimp(lm_both_avg, rela=FALSE)
+print('relative importance (relimp) on averaged data: ')
 relimp_avg$lmg
 
 textsize = 4
@@ -141,20 +152,25 @@ dev.off()
 ## partial correlations for paper (averaged data)
 correlations <- corr.test(both_avg[,c('bond','pleasantness','touchability_proportion')])
 part_bond <- partial.r(data=correlations$r,c(1,3), c(2), method='spearman')
-corr.p(part_bond, n=correlations$n)
+no_pleasantness <- corr.p(part_bond, n=correlations$n)
+print(paste("partial correlation on averaged data, TI~bond, pleasantness removed:", no_pleasantness$r[2,1]))
 part_pleas <- partial.r(data=correlations$r,c(2,3), c(1), method='spearman')
-corr.p(part_pleas, n=correlations$n)
+no_bond <- corr.p(part_pleas, n=correlations$n)
+print(paste("partial correlation on averaged data, TI~pleasantness, bond removed:", no_bond$r[2,1]))
 
 # average R squared
-mean(c(summary(lm_uk_avg)$adj.r.squared,summary(lm_jp_avg)$adj.r.squared))
+# mean(c(summary(lm_uk_avg)$adj.r.squared,summary(lm_jp_avg)$adj.r.squared))
 
 ## VISUALISE UN-AVERAGED DATA (supplementary materials)
 total_both$country <- factor(total_both$country, levels = c('jp','uk'), labels=c('Japan','UK'))
 lm_both_3 <- lm(scale(touchability_proportion)~scale(pleasantness)+scale(bond)+country, data=total_both)
+print('TI~ bond+pleasantness+country,full (unaveraged) data: ')
 summary(lm_both_3)
+print('betas for full (unaveraged) data: ')
 lm.beta(lm_both_3)
 
 relimp_full <- calc.relimp(lm_both_3, rela=FALSE)
+print('relative importance (relimp) on full (unaveraged) data: ')
 relimp_full$lmg
 
 textsize = 4
@@ -244,8 +260,7 @@ lm_uk <- lm(touchability~pleasantness+bond, data=total_uk)
 # average R squared
 #mean(c(summary(lm_uk)$adj.r.squared,summary(lm_jp)$adj.r.squared))
 
-#corr.test(total_jp[,c('touchability','bond','pleasantness')], method='spearman')
-#corr.test(total_uk[,c('touchability','bond','pleasantness')], method='spearman')
+
 
 lm_both_2 <- lm(scale(touchability)~scale(bond)+country+scale(pleasantness), data=total_both)
 #summary(lm_both_2)
@@ -275,4 +290,5 @@ print(paste0('mean adjusted R2 as presented in the paper: ', mean(r2s), ', range
 # calc.relimp(lm_jp_m, rela=FALSE)
 # calc.relimp(lm_uk_f, rela=FALSE)
 # calc.relimp(lm_uk_m, rela=FALSE)
-
+sink()
+unlink(sinkfile)

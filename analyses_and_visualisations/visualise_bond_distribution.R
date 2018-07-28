@@ -7,6 +7,8 @@ require(beanplot)
 dataroot <- '/Volumes/SCRsocbrain/cultural_comparison_code_test/data/'
 figlocation <- '/Volumes/SCRsocbrain/cultural_comparison_code_test/figs/'
 visualise_what = 'Emotional Bond' # 'Touch Pleasantness' or 'Emotional Bond' or 'Touchability Index'
+sink(paste0("/Users/jtsuvile/Documents/projects/jap-touch/stat_distributions_", visualise_what, ".txt"))
+
 
 # shouldn't need to edit values below
 whole_fig_size = 178524
@@ -156,3 +158,6 @@ title(ylab='Person', line=5.5, cex.lab=1.5)
 #par(mar=c(20, 4, 20, 2) + 0.1)
 dev.off()
 
+print(visualise_what)
+print(test_res)
+sink()

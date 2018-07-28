@@ -7,8 +7,10 @@ library(relaimpo)
 source('../bodySPM/summarySE.R')
 source('../bodySPM/multiplot.R')
 
+sinkfile <- "/Users/jtsuvile/Documents/projects/jap-touch/stat_gender_output.txt"
 dataroot <- '/Volumes/SCRsocbrain/cultural_comparison_code_test/data/'
 figlocation <- '/Volumes/SCRsocbrain/cultural_comparison_code_test/figs/'
+
 trim = c(1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18) 
 people <- c('Partner', 'kid', 'Mother', 'Father', 'Sister', 'Brother', 
             'Aunt', 'Uncle', 'F_Cousin', 'M_Cousin',
@@ -122,51 +124,71 @@ p6
 dev.off()
 
 ## Statistical analyses
+sinkwrite <- file(sinkfile, open = "wt")
+sink(sinkwrite)
 
 # ANOVA
 lm_no_partner <- aov(touchability_proportion~subsex*toucher_sex*country, data=no_partner)
 summary(lm_no_partner)
-TukeyHSD(lm_no_partner)
+#TukeyHSD(lm_no_partner)
 
 #main effect: country
-mean(no_partner$touchability_proportion[no_partner$country=='jp'])
-mean(no_partner$touchability_proportion[no_partner$country=='uk'])
-sd(no_partner$touchability_proportion[no_partner$country=='jp'])
-sd(no_partner$touchability_proportion[no_partner$country=='uk'])
+print(paste('TI by country: jp mean =', mean(no_partner$touchability_proportion[no_partner$country=='jp']),
+            'sd =', sd(no_partner$touchability_proportion[no_partner$country=='jp'])))
+print(paste('TI by country: uk mean =', mean(no_partner$touchability_proportion[no_partner$country=='uk']),
+            'sd =', sd(no_partner$touchability_proportion[no_partner$country=='uk'])))
+
 
 # main effect: toucher sex
-mean(no_partner$touchability_proportion[no_partner$toucher_sex=='Female'])
-sd(no_partner$touchability_proportion[no_partner$toucher_sex=='Female'])
-mean(no_partner$touchability_proportion[no_partner$toucher_sex=='Male'])
-sd(no_partner$touchability_proportion[no_partner$toucher_sex=='Male'])
-t.test(no_partner$touchability_proportion[no_partner$toucher_sex=='Female'],no_partner$touchability_proportion[no_partner$toucher_sex=='Male'])
+print(paste('TI by toucher sex: female toucher mean =', mean(no_partner$touchability_proportion[no_partner$toucher_sex=='Female']),
+            'sd =',sd(no_partner$touchability_proportion[no_partner$toucher_sex=='Female'])))
+print(paste('TI by toucher sex: male toucher mean =',mean(no_partner$touchability_proportion[no_partner$toucher_sex=='Male']),
+            'sd =', sd(no_partner$touchability_proportion[no_partner$toucher_sex=='Male'])))
+#t.test(no_partner$touchability_proportion[no_partner$toucher_sex=='Female'],no_partner$touchability_proportion[no_partner$toucher_sex=='Male'])
 
-# subsex:toucher sex
-mean(no_partner$touchability_proportion[no_partner$toucher_sex=='Female'&no_partner$subsex=='female'])-mean(no_partner$touchability_proportion[no_partner$toucher_sex=='Male'&no_partner$subsex=='female'])
-sd(no_partner$touchability_proportion[no_partner$toucher_sex=='Female'&no_partner$subsex=='female'])-sd(no_partner$touchability_proportion[no_partner$toucher_sex=='Male'&no_partner$subsex=='female'])
-mean(no_partner$touchability_proportion[no_partner$toucher_sex=='Female'&no_partner$subsex=='male'])-mean(no_partner$touchability_proportion[no_partner$toucher_sex=='Male'&no_partner$subsex=='male'])
-sd(no_partner$touchability_proportion[no_partner$toucher_sex=='Female'&no_partner$subsex=='male'])-sd(no_partner$touchability_proportion[no_partner$toucher_sex=='Male'&no_partner$subsex=='male'])
+# main effect of subject sex was not significant
 
-t.test(no_partner$touchability_proportion[no_partner$toucher_sex=='Female'&no_partner$subsex=='male'&no_partner$country=='jp'],
-       no_partner$touchability_proportion[no_partner$toucher_sex=='Male'&no_partner$subsex=='male'&no_partner$country=='jp'])
-
+# interaction subsex:toucher sex
 ss_ts <- summarySE(no_partner, measurevar="touchability_proportion", groupvars=c('subid',"toucher_sex", 'subsex'), na.rm=TRUE)
 wide_ss_ts <- reshape(ss_ts, direction='wide', idvar = c('subid', 'subsex'), timevar= c('toucher_sex'), drop=c('se','sd','ci'))
 female_diff <- wide_ss_ts[wide_ss_ts$subsex=='female','touchability_proportion.Female']-wide_ss_ts[wide_ss_ts$subsex=='female','touchability_proportion.Male']
 male_diff <- wide_ss_ts[wide_ss_ts$subsex=='male','touchability_proportion.Female']-wide_ss_ts[wide_ss_ts$subsex=='male','touchability_proportion.Male']
+print(paste('interaction subsex:toucher sex: mean TI difference in female subjects =',mean(female_diff),'sd =',sd(female_diff)))
+print(paste('interaction subsex:toucher sex: mean TI difference in male subjects =',mean(male_diff),'sd =',sd(male_diff)))
+
+print('t-test for interaction subsex:toucher sex:')
 t.test(female_diff, male_diff)
-mean(female_diff)
-sd(female_diff)
-mean(male_diff)
-sd(male_diff)
-# subsex:country
+
+# interaction subsex:country
 ss_co <- summarySE(no_partner, measurevar="touchability_proportion", groupvars=c("country", 'subsex'), na.rm=TRUE)
 
-t.test(no_partner$touchability_proportion[no_partner$country=='jp'&no_partner$subsex=='male'], no_partner$touchability_proportion[no_partner$country=='jp'&no_partner$subsex=='female'])
-t.test(no_partner$touchability_proportion[no_partner$country=='jp'&no_partner$subsex=='male'], no_partner$touchability_proportion[no_partner$country=='en'&no_partner$subsex=='male'])
-t.test(no_partner$touchability_proportion[no_partner$country=='jp'&no_partner$subsex=='male'], no_partner$touchability_proportion[no_partner$country=='en'&no_partner$subsex=='female'])
+print('interaction subsex:country:')
+print(paste('Japanese male subjects mean TI =', ss_co$touchability_proportion[ss_co$subsex=='male'&ss_co$country=='jp'], 'sd =', ss_co$sd[ss_co$subsex=='male'&ss_co$country=='jp']))
+print(paste('Japanese female subjects mean TI =', ss_co$touchability_proportion[ss_co$subsex=='female'&ss_co$country=='jp'], 'sd=', ss_co$sd[ss_co$subsex=='female'&ss_co$country=='jp']))
+print(paste('British male subjects mean TI =', ss_co$touchability_proportion[ss_co$subsex=='male'&ss_co$country=='uk'], 'sd =', ss_co$sd[ss_co$subsex=='male'&ss_co$country=='uk']))
+print(paste('British female subjects mean TI =', ss_co$touchability_proportion[ss_co$subsex=='female'&ss_co$country=='uk'], 'sd=', ss_co$sd[ss_co$subsex=='female'&ss_co$country=='uk']))
 
-# toucher sex:country
+t_jpmjpf <- t.test(no_partner$touchability_proportion[no_partner$country=='jp'&no_partner$subsex=='male'], no_partner$touchability_proportion[no_partner$country=='jp'&no_partner$subsex=='female'])
+t_jpmukm <- t.test(no_partner$touchability_proportion[no_partner$country=='jp'&no_partner$subsex=='male'], no_partner$touchability_proportion[no_partner$country=='uk'&no_partner$subsex=='male'])
+t_jpmukf <- t.test(no_partner$touchability_proportion[no_partner$country=='jp'&no_partner$subsex=='male'], no_partner$touchability_proportion[no_partner$country=='uk'&no_partner$subsex=='female'])
+print('Japanese male subjects have higher TI than the rest, with t-scores')
+print(paste("jp male vs jp female, t-test score =", t_jpmjpf$statistic, "p = ", t_jpmjpf$p.value, '(df:', t_jpmjpf$parameter,')'))
+print(paste("jp male vs uk male, t-test score =", t_jpmukm$statistic, "p = ", t_jpmukm$p.value, '(df:', t_jpmukm$parameter,')'))
+print(paste("jp male vs uk female, t-test score =", t_jpmukf$statistic, "p = ", t_jpmukf$p.value, '(df:', t_jpmukf$parameter,')'))
+
+# interaction toucher sex:country
 ts_co <- summarySE(no_partner, measurevar="touchability_proportion", groupvars=c("country", 'toucher_sex'), na.rm=TRUE)
-t.test(no_partner$touchability_proportion[no_partner$country=='jp'&no_partner$toucher_sex=='Female'], no_partner$touchability_proportion[no_partner$country=='en'&no_partner$toucher_sex=='Female'])
+print('interaction toucher sex:country:')
+print(paste('Japanese male touchers mean TI =', ts_co$touchability_proportion[ts_co$toucher_sex=='Male'&ss_co$country=='jp'], 'sd =', ts_co$sd[ts_co$toucher_sex=='Male'&ss_co$country=='jp']))
+print(paste('Japanese female touchers mean TI =', ts_co$touchability_proportion[ts_co$toucher_sex=='Female'&ss_co$country=='jp'], 'sd =', ts_co$sd[ts_co$toucher_sex=='Female'&ss_co$country=='jp']))
+print(paste('British male touchers mean TI =', ts_co$touchability_proportion[ts_co$toucher_sex=='Male'&ss_co$country=='uk'], 'sd =', ts_co$sd[ts_co$toucher_sex=='Male'&ss_co$country=='uk']))
+print(paste('British female touchers mean TI =', ts_co$touchability_proportion[ts_co$toucher_sex=='Female'&ss_co$country=='uk'], 'sd =', ts_co$sd[ts_co$toucher_sex=='Female'&ss_co$country=='uk']))
+
+t_ukfjpf <- t.test(no_partner$touchability_proportion[no_partner$country=='jp'&no_partner$toucher_sex=='Female'], no_partner$touchability_proportion[no_partner$country=='uk'&no_partner$toucher_sex=='Female'])
+print(paste("uk female vs jp female touchers, t-test score =", t_ukfjpf$statistic, "p = ", t_ukfjpf$p.value, '(df:', t_ukfjpf$parameter,')'))
+
+# t.test(no_partner$touchability_proportion[no_partner$country=='jp'&no_partner$toucher_sex=='Male'], no_partner$touchability_proportion[no_partner$country=='uk'&no_partner$toucher_sex=='Male']) # ns.
+
+sink()
+unlink(sinkwrite)
 

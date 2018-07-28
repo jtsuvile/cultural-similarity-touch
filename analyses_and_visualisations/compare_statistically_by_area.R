@@ -7,7 +7,9 @@ library(relaimpo)
 
 bodyspmloc <- '/Users/jtsuvile/Documents/projects/cultural-universalism-touch/BodySPM/'
 dataroot <- '/Volumes/SCRsocbrain/cultural_comparison_code_test/data/'
-  
+sink("/Users/jtsuvile/Documents/projects/jap-touch/ROI.txt")
+
+
 people <- c('Partner', 'kid', 'Mother', 'Father', 'Sister', 'Brother', 
             'Aunt', 'Uncle', 'F_Cousin', 'M_Cousin',
             'F_Friend', 'M_Friend', 'F_Acq', 'M_Acq', 'm kid', 'f kid', 
@@ -168,4 +170,4 @@ print(paste("mean t value for intercepts jp>uk :", mean(diffs$tval_intercept[dif
 print(paste("mean t value for slopes jp>uk :", mean(diffs$tval_slope[diffs$slope_country=='jp']), 'p < ', max(diffs$p_adj_slope[diffs$slope_country=='jp'])))
 print(paste("mean t value for intercepts uk>jp :", mean(diffs$tval_intercept[diffs$intercept_country=='uk']), 'p < ', max(diffs$p_adj_intercept[diffs$intercept_country=='uk'])))
 print("no slope is significantly  uk>jp")
-      
+sink()
