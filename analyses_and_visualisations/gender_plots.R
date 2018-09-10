@@ -51,19 +51,20 @@ no_partner$relationship[no_partner$person=='F_Cousin'|no_partner$person=='M_Cous
 no_partner$relationship[no_partner$person=='F_Friend'|no_partner$person=='M_Friend'] <- 'Friend'
 no_partner$relationship[no_partner$person=='F_Acq'|no_partner$person=='M_Acq'] <- 'Acq.'
 no_partner$relationship <- factor(no_partner$relationship, levels=c('Parent','Sibling','Aunt/Uncle','Cousin','Friend','Acq.','Stranger'))
+no_partner$country <- factor(no_partner$country, levels = c('uk','jp'), labels= c('UK', 'Japan'))
+no_partner$subsex <- factor(no_partner$subsex, levels = c('female','male'), labels= c('Female', 'Male'))
 
-no_partner_aggregate <- summarySE(no_partner, measurevar="touchability_proportion", groupvars=c("subsex", "person", "toucher_sex", 'relationship', 'country'), na.rm=TRUE)
-no_partner_aggregate$country <- factor(no_partner_aggregate$country, levels = c('uk','jp'), labels= c('UK', 'Japan'))
-no_partner_aggregate$subsex <- factor(no_partner_aggregate$subsex, levels = c('female','male'), labels= c('Female', 'Male'))
+# Not needed for boxplot
+#no_partner_aggregate <- summarySE(no_partner, measurevar="touchability_proportion", groupvars=c("subsex", "person", "toucher_sex", 'relationship', 'country'), na.rm=TRUE)
+#no_partner_aggregate$country <- factor(no_partner_aggregate$country, levels = c('uk','jp'), labels= c('UK', 'Japan'))
+#no_partner_aggregate$subsex <- factor(no_partner_aggregate$subsex, levels = c('female','male'), labels= c('Female', 'Male'))
 
 # Barchart
-p5 <- ggplot(data=no_partner_aggregate, aes(x=relationship, 
+p5 <- ggplot(data=no_partner, aes(x=relationship, 
                                             y=touchability_proportion, 
-                                            fill = toucher_sex,
-                                            group = toucher_sex))+
-  geom_bar(stat="identity", alpha=0.8, size=0.5, position=position_dodge()) +
-  geom_errorbar(aes(ymin=touchability_proportion-se, ymax=touchability_proportion+se),position=position_dodge(), width=0.8) +
-  facet_grid(no_partner_aggregate$country~no_partner_aggregate$subsex) +
+                                            fill = toucher_sex))+
+  geom_boxplot(alpha=0.8, size=0.5,position=position_dodge(), notch=TRUE) +
+  facet_grid(no_partner$country~no_partner$subsex) +
   ylab('Mean TI') + 
   scale_fill_brewer("Toucher\nsex",type='qual',palette = 'Set1', direction=1) +
   scale_x_discrete("Relationship") +
@@ -78,9 +79,9 @@ p5 <- ggplot(data=no_partner_aggregate, aes(x=relationship,
         strip.background = element_rect(colour="white", fill="white"),
         strip.text.y = element_text(face="bold", angle=0),
         strip.text.x = element_text(face="bold")) +
-  ylim(0,0.5)
+  ylim(0,1)
 
-pdf(paste0(figlocation, '/gender_effect_barchart_facet_wrap.pdf'))
+pdf(paste0(figlocation, '/gender_effect_boxplot_facet_wrap.pdf'))
 p5
 dev.off()
 
