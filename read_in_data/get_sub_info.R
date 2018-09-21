@@ -31,11 +31,25 @@ for(country in countries){
       }
     }
   }
+  
+  
+  # hide all unused indirect identifiers to comply with Dryad data sharing practices
+  # indirect identifiers left in the data are 1) gender, 2) age, and 3) sexual orientation
+  data$height <- NA
+  data$weight <- NA
+  data$handedness <- NA
+  data$education <- NA
+  data$psychologist <- NA
+  data$psychiatrist <- NA
+  data$neurologist <- NA
+  
   #next, get final subject list by checking cultural background and excluding subjects having unclear culture or failing quality control
   if (country=='jp'){
     #separate out subs with anything unusual in their cultural background
-    bad_cultural_subs <- data[!(data$lived_abroad==0&data$mom_race=='japanese'&data$dad_race=='japanese'),]
+    bad_cultural_subs <- data[!(data$lived_abroad==0&data$mom_race=='japanese'&data$dad_race=='japanese'),c("subid","mom_race","dad_race","lived_abroad","time_abroad")]
     
+    #hide Japan-specific indirect identifiers
+    data[,12:18] <- NA 
   } else if (country=='uk'){
     data$describe <- tolower(data$describe) # remove impact of capitalization
     # terms selected manually from responses, trying to identify all that specify british, english, scottish, welsh or irish or a part of those, 
@@ -45,8 +59,11 @@ for(country in countries){
                                 'brrtitish','english.','british ', 'britsh','irush','irish ',"uk","united kingdom ",
                                 'yorkshire','british european','middle class english','british pakistan muslim',"british pakistani muslim") 
     #data$describe[!data$describe%in% british_cultural_terms] # if you want to check there are no more relevant terms
-    bad_cultural_subs <- data[!data$describe%in%british_cultural_terms,]
+    bad_cultural_subs <- data[!data$describe%in%british_cultural_terms,c("subid","nationality","describe")]
+    #hide UK-specific indirect identifiers
+    data[,11:12] <- NA 
   }
+  
   write.table(bad_cultural_subs$subid, paste(behavroot, 'not_clear_culture.txt', sep=''), col.names=FALSE, quote=FALSE, row.names=FALSE)
   write.csv(bad_cultural_subs, paste0(behavroot, 'subinfo_not_clear_culture.csv'), quote=FALSE, row.names=FALSE)
   #read in subs who failed QC
@@ -55,14 +72,16 @@ for(country in countries){
   write.table(good_subs, paste(behavroot, 'subs.txt', sep=''), col.names=FALSE, quote=FALSE, row.names=FALSE)
   good_data = data[data$subid%in%good_subs,]
   
-  #strip text fields off the following for matlab use
-  write.csv(good_data[,1:11], paste(behavroot, 'subinfo_for_matlab.csv', sep=''), quote=FALSE, row.names=FALSE)
+  #strip text fields off 
+  good_data <- good_data[,1:11]
+  write.csv(good_data, paste(behavroot, 'subinfo_for_matlab.csv', sep=''), quote=FALSE, row.names=FALSE)
   # data.copy <- data
   # code factors as text for a human-readable csv
-  good_data$handedness <- factor(good_data$handedness, levels=c(1,0), labels=c('right','left'))
+  # good_data$handedness <- factor(good_data$handedness, levels=c(1,0), labels=c('right','left'))
+  
   # NB: having 1 code female is not a mistake, it's how the values are coded in the online system
   good_data$sex <- factor(good_data$sex, levels=c(1,0,5), labels=c('female','male','other')) 
-  good_data$education <- factor(good_data$education, levels=c(0,1,2), labels=c('elementary','middle','university')) 
+  # good_data$education <- factor(good_data$education, levels=c(0,1,2), labels=c('elementary','middle','university')) 
   if (country=='jp'){
     good_data$sexual_orientation <- factor(good_data$sexual_orientation, levels=c(1,0,2,3), labels=c('female','male','both','neither')) 
   }
