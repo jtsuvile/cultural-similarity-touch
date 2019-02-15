@@ -153,11 +153,27 @@ rsqs <- data.frame(matrix(ncol=2, nrow=length(area_names)))
 colnames(rsqs) <- c('r_squared', 'adj_r_squared')
 rownames(rsqs) <- area_names
 
+effects_intercept <- data.frame(matrix(ncol=5, nrow=length(area_names)))
+colnames(effects_intercept) <- c("estimate","stderr","tval","p_t","df")
+rownames(effects_intercept) <- area_names
+
+effects_slope <- data.frame(matrix(ncol=5, nrow=length(area_names)))
+colnames(effects_slope) <- c("estimate","stderr","tval","p_t","df")
+rownames(effects_slope) <- area_names
+
 for(i in 1:length(area_names)){
   if(diffs$p_adj_slope[i]<0.05){
     use_summary = lms2[[i]]
   } else {
     use_summary = lms1[[i]]
+  }
+  if(diffs$p_adj_slope[i]<0.05){
+    effects_slope[i,1:4] <- use_summary$coefficients['countryuk:bond',]
+    effects_slope[i,5] <- use_summary$df[2]
+  }
+  if(diffs$p_adj_intercept[i]<0.05){
+    effects_intercept[i,1:4] <- use_summary$coefficients['countryuk',]
+    effects_intercept[i,5] <- use_summary$df[2]
   }
   rsqs$r_squared[i] <- use_summary$r.squared
   rsqs$adj_r_squared[i] <- use_summary$adj.r.squared

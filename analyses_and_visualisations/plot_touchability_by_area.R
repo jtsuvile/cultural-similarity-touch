@@ -102,7 +102,7 @@ p=ggplot() +
   geom_line(data=foobar, aes(avg_bond, value, col=country),alpha=0.5, stat='smooth', method=lm, se=FALSE, size=1) +
   facet_wrap(~variable, nrow=4, dir='v') +
   scale_x_continuous(breaks=1:10, limits=c(1,10)) +
-  scale_color_manual(breaks=unique(foobar$country), values= c('gray75','#F8766D','#00BFC4')) +#c('#00965E','#FF671F')) + #values=c('chartreuse3','deeppink1')
+  scale_color_manual(breaks=unique(foobar$country), values= c('#F8766D','gray75','#00BFC4')) +#c('#00965E','#FF671F')) + #values=c('chartreuse3','deeppink1')
   scale_y_continuous(limits=c(lower_lim_y,upper_lim_y), breaks=seq(0,1,0.2))+
   theme_bw()+
   theme(panel.grid = element_blank(),

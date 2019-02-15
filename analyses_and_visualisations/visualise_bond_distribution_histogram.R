@@ -7,7 +7,7 @@ library(grid)
 # edit these values
 dataroot <- '/Volumes/SCRsocbrain/cultural_comparison_code_test/data/'
 figlocation <- "/Users/jtsuvile/Documents/projects/jap-touch/visualizations/"
-visualise_what = 'Touch Pleasantness' # 'Touch Pleasantness' or 'Emotional Bond' 
+visualise_what = 'Touch Pleasantness'  # 'Touch Pleasantness' or 'Emotional Bond' 
 #sink(paste0("/Users/jtsuvile/Documents/projects/jap-touch/stat_distributions_", visualise_what, ".txt"))
 
 # shouldn't need to edit values below

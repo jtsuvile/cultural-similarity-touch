@@ -6,7 +6,7 @@ require(beanplot)
 # edit these values
 dataroot <- '/Volumes/SCRsocbrain/cultural_comparison_code_test/data/'
 figlocation <- '/Volumes/SCRsocbrain/cultural_comparison_code_test/figs/'
-visualise_what = 'Emotional Bond' # 'Touch Pleasantness' or 'Emotional Bond' or 'Touchability Index'
+visualise_what = 'Touchability Index' # 'Touch Pleasantness' or 'Emotional Bond' or 'Touchability Index'
 sink(paste0("/Users/jtsuvile/Documents/projects/jap-touch/stat_distributions_", visualise_what, ".txt"))
 
 

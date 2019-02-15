@@ -49,7 +49,8 @@ for(country in countries){
     bad_cultural_subs <- data[!(data$lived_abroad==0&data$mom_race=='japanese'&data$dad_race=='japanese'),c("subid","mom_race","dad_race","lived_abroad","time_abroad")]
     
     #hide Japan-specific indirect identifiers
-    data[,12:18] <- NA 
+    culture <- data[,c(1,12:18)] 
+    data[,c(12:18)] <- NA 
   } else if (country=='uk'){
     data$describe <- tolower(data$describe) # remove impact of capitalization
     # terms selected manually from responses, trying to identify all that specify british, english, scottish, welsh or irish or a part of those, 
@@ -61,16 +62,21 @@ for(country in countries){
     #data$describe[!data$describe%in% british_cultural_terms] # if you want to check there are no more relevant terms
     bad_cultural_subs <- data[!data$describe%in%british_cultural_terms,c("subid","nationality","describe")]
     #hide UK-specific indirect identifiers
+    culture <- data[,c(1,11:12)]
     data[,11:12] <- NA 
   }
   
   write.table(bad_cultural_subs$subid, paste(behavroot, 'not_clear_culture.txt', sep=''), col.names=FALSE, quote=FALSE, row.names=FALSE)
   write.csv(bad_cultural_subs, paste0(behavroot, 'subinfo_not_clear_culture.csv'), quote=FALSE, row.names=FALSE)
+  
   #read in subs who failed QC
   validation <- read.csv(paste0(behavroot, 'qc_fail.txt'), header=FALSE)
   good_subs <- setdiff(data$subid, union(bad_cultural_subs$subid, validation$V1))
   write.table(good_subs, paste(behavroot, 'subs.txt', sep=''), col.names=FALSE, quote=FALSE, row.names=FALSE)
   good_data = data[data$subid%in%good_subs,]
+  
+  good_culture = culture[culture$subid%in%good_subs,]
+  randomised_culture = good_culture[sample(nrow(good_culture), nrow(good_culture)), -1]
   
   #strip text fields off 
   good_data <- good_data[,1:11]
@@ -80,11 +86,12 @@ for(country in countries){
   # good_data$handedness <- factor(good_data$handedness, levels=c(1,0), labels=c('right','left'))
   
   # NB: having 1 code female is not a mistake, it's how the values are coded in the online system
-  good_data$sex <- factor(good_data$sex, levels=c(1,0,5), labels=c('female','male','other')) 
+  good_data$sex <- factor(good_data$sex, levels=c(1,0,5), labels=c('female','male','other')) # sic! in the system female == 1, male == 0
   # good_data$education <- factor(good_data$education, levels=c(0,1,2), labels=c('elementary','middle','university')) 
   if (country=='jp'){
     good_data$sexual_orientation <- factor(good_data$sexual_orientation, levels=c(1,0,2,3), labels=c('female','male','both','neither')) 
   }
   write.csv(good_data, paste0(behavroot, 'subs_basic_info.csv'), quote=FALSE, row.names=FALSE)
+  write.csv(randomised_culture, paste0(behavroot, 'culture_for_good_subs_rand_order.csv'), quote=FALSE, row.names=FALSE)
 }
 
