@@ -24,7 +24,6 @@ torso_back_color = 51;
 grotch_color = 128;
 butt_color = 77;
 leg_front_color = 51;
-leg_back_color = 153;
 foot_color = 230;
 %%
 hair_indices_front = find(front_areas==hair_color);
@@ -35,7 +34,7 @@ shoulder_indices_front = find(front_areas==shoulder_front_color);
 shoulder_indices_back = find(back_areas==shoulder_back_color);
 hand_indices = find(front_areas==hand_color);
 torso_indices_front = find(front_areas==torso_front_color);
-torso_indices_back = find(front_areas==torso_back_color);
+torso_indices_back = find(back_areas==torso_back_color);
 grotch_indices = find(front_areas==grotch_color);
 butt_indices = find(back_areas==butt_color);
 leg_indices = find(front_areas==leg_front_color);

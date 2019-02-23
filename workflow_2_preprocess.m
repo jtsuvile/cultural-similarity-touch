@@ -33,9 +33,9 @@ binarize_coloring(dataloc_jp, people_jp);
 % (TI shown in manuscript = sli/size of mask)
 
 % Japanese data
-countSLI(dataloc_jp, bodyspmdir);
+countTI(dataloc_jp, bodyspmdir);
 % British data
-countSLI(dataloc_uk, bodyspmdir);
+countTI(dataloc_uk, bodyspmdir);
 %% Calculate proportion coloured per pixel (for visualisation)
 % this code will create and save 
 % '/mat-files/all_proportion_acceptable.mat' with variable 'all_prop_acceptable'
@@ -44,9 +44,6 @@ countSLI(dataloc_uk, bodyspmdir);
 prop_colored(dataloc_uk, people_uk)
 % Japanese data
 prop_colored(dataloc_jp, people_jp)
-%% Collect TI per subject per toucher
-countTI(dataloc_jp, bodyspmdir);
-countTI(dataloc_uk, bodyspmdir);
 %% Save ROI-wise info
 dataroot = '/m/nbe/scratch/socbrain/cultural_comparison_code_test/data/';
 bodyspmdir='/m/nbe/scratch/socbrain/cultural_comparison_code_test/cultural-universalism-touch/BodySPM/';
